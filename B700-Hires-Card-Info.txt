@@ -1,0 +1,103 @@
+B700 HiRes Card for CBM-II Computers - Reverse Engineering Project by Steve J. Gray 
+====================================   Started: Mar 6, 2018. Last update: Mar 6, 2018
+
+*** NOTE: This is a work in progress!!! ***
+
+The B700 Hires Card is a bitmapped graphics card for CBM-II High-profile computers.
+It contains 32K of video RAM and some support chips. It mounts on the CBM-II motherboard
+into the 2K video RAM socket, the character RAM socket, and the U30 socket. The chips in
+those sockets are transferred onto the Hires card.
+
+It was found in a non-working CBM-II 720 computer.
+
+Thanks to Christian Forstreuter for detailed pictures of the board
+
+
+PCB Installation
+================
+
+- The board plugs into the video RAM, character ROM, and U30 sockets.
+- A ribbin cable connects the board to the U30 socket and to the USER PORT.
+- The board is self-supporting.
+
+
+Parts list
+==========
+
+Note: The PCB has no component identification. Part#'s have been assigned.
+      
+U1  - 2332        ROM 4Kx8  (MOS901232-01 from Motherboard)
+U2  - 6116        SRAM 2Kx8 (AM9128-10PC  from Motherboard)
+U3  - D43256C-12L SRAM 32Kx8
+U4  - 74LS32N     Quad 2-input OR gate
+U5  - 74LS32N     Quad 2-input OR gate
+U6  - 74LS157N    Quad 2-line to 1-line data selector/multiplexer, non-inverting outputs
+U7  - SN74ALS574N Octal D-type edge-triggered flip-flop, three-state outputs
+U8  - SN74LS245N  Octal bus transceiver, non-inverting three-state outputs
+U9  - SN74LS245N  From Motherboard U30 socket
+U10 - Socket      Ribbon Cable to U30
+U11 - SN74LS32N   Quad 2-input OR gate
+U12 - SN74LS32N   Quad 2-input OR gate
+U13 - SN74LS00N   Quad 2-input NAND gate
+
+
+Flyouts
+=======
+
+
+
+Board Layout
+============
+
+
+        (H)=HOLE, O=PIN or WIRE PAD, x=NO PIN
+
+      --------------------------------------------------------------------------------
+     |                                                                                |
+     |                                                                                | 
+     |   U10 #  U9 ##  U8 ##      U7 ###########                    U4 ########       |
+     |   #####  #####  #####      ##############                    ###########       |
+     |   #####  #####  #####      ##############                    ###########       |
+     |   #####  #####  #####                                                          |
+     |   #####  #####  #####      U3 #######    U2 #######           U1 #######       |
+     |   #####  #####  #####      ##########    ##########           ##########       |
+     |   #####  #####  #####      ##########    ##########           ##########       |
+     |                            ##########    ##########           ##########       |
+     |                            ##########    ##########           ##########       |
+     |                            ##########    ##########           ##########       |
+     |                            ##########    ##########           ##########       |
+     |   U13 #  U12 #  U11 #      ##########    ##########           ##########       |
+     |   #####  #####  #####      ##########    ##########           ##########       |
+     |   #####  #####  #####      ##########                                          |
+     |   #####  #####  #####      ##########  U6 #########         U5 #########       |
+     |   #####  #####  #####                  ############         ############       |
+     |   #####  #####  #####                  ############         ############       |
+     |   #####  #####  #####                                                          |
+     |                                                                                |
+     |                             OOOOOOO                                            |
+     |                                                                                |
+      --------------------------------------------------------------------------------
+
+Theory of Operation
+===================
+
+*** NOTE: Until the board is fully reverse engineered this is only a guess! ***
+
+The CBM-II HP machines produce a normal 80 x 25 character text display. Each character is
+8x14 pixels, giving an effective resolution of 640 x 350. We would need 24K of ram to
+be able to generate an equivilent bitmapped resolution.
+
+There is no separate video out, so the graphics are merged with character data at the
+character ROM. The board connects to the computer's 2K video ram. This means the graphics
+"follow" (or overlays) the characters using the video ram's address as part of the graphics
+address. The other part of the graphics address probably comes from the ROW counter of the
+character ROM. 
+
+The board connects to the user port, probably providing the upper address for CPU access to
+graphics ram. There are 8K chunks decoded in bank 15 at $4000, $6000, and $8000. If the graphics
+ram resides at one of these locations then we would need 2 additional address lines to access
+the entire 32K of graphics ram.
+
+
+
+
